@@ -3,6 +3,7 @@ import asyncio
 from bot.core.client import bot
 import bot.core.loader
 from bot.utils.logger import logger
+from bot.workers.post_worker import post_worker
 
 app = FastAPI()
 
@@ -13,6 +14,9 @@ async def health_check():
 async def start_bot():
     await bot.start()
     logger.info('Bot Started Successfully')
+
+    asyncio.create_task(post_worker())
+
     await asyncio.Event().wait()
 
 @app.on_event('startup')
