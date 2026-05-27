@@ -1,26 +1,20 @@
 from fastapi import FastAPI
-from pyrogram import Client
 import asyncio
-import os
+from bot.core.client import bot
+import bot.core.loader
+from bot.utils.logger import logger
 
 app = FastAPI()
 
-bot = Client(
-    "auto-deals-bot",
-    api_id=int(os.getenv("API_ID", 0)),
-    api_hash=os.getenv("API_HASH", ""),
-    bot_token=os.getenv("BOT_TOKEN", "")
-)
-
-@app.get("/")
+@app.get('/')
 async def health_check():
-    return {"status": "running"}
+    return {'status': 'running'}
 
 async def start_bot():
     await bot.start()
-    print("Bot Started")
+    logger.info('Bot Started Successfully')
     await asyncio.Event().wait()
 
-@app.on_event("startup")
+@app.on_event('startup')
 async def startup_event():
     asyncio.create_task(start_bot())
