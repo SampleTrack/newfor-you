@@ -1,10 +1,12 @@
 import asyncio
 from pyrogram.errors import FloodWait
+from pyrogram.enums import ParseMode
 from bot.core.queue import post_queue
 from bot.core.client import bot
 from bot.database.mongo import channels
 from bot.utils.duplicate import is_duplicate, save_post
 from bot.utils.logger import logger
+from bot.utils.buttons import deal_button
 
 async def post_worker():
     while True:
@@ -23,6 +25,8 @@ async def post_worker():
                     await bot.send_message(
                         channel['channel_id'],
                         text,
+                        parse_mode=ParseMode.HTML,
+                        reply_markup=deal_button(link),
                         disable_web_page_preview=False
                     )
 
